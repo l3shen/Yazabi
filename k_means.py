@@ -13,15 +13,14 @@ def plot_results(all_data, centroids, n_samples_per_cluster):
     for i, centroid in enumerate(centroids):
         samples = all_data[i*n_samples_per_cluster:(i+1)*n_samples_per_cluster]
         plt.scatter(samples[:,0], samples[:,1], c = colour[i])
-        plt.plot(centroid[0], centroid[1], markersize = 35, marker = 'x', color = 'k', mew = 10)
-        plt.plot(centroid[0], centroid[1], markersize = 30, marker = 'x', color = 'm', mew = 5)
+        plt.plot(centroid[0], centroid[1], markersize = 5, marker = 'h', color = 'k', mew = 10)
     plt.show()
 
 def run_k_means(n_clusters, samples_per_cluster, n_features, embiggen_factor, seed):
     # set up packages
     import tensorflow as tf
 
-    # create data, and perform K means clustering
+    # create data for K means
     data_centroids, samples = create_samples(n_clusters, samples_per_cluster, n_features, embiggen_factor, seed)
     initial_k_centroids = choose_random_centroids(samples, n_clusters)
     nearest_indices = assign_to_nearest(samples, initial_k_centroids)
@@ -32,6 +31,7 @@ def run_k_means(n_clusters, samples_per_cluster, n_features, embiggen_factor, se
     with tf.Session() as session:
         data_values = session.run(samples)
         updated_centroid_value = session.run(updated_centroids)
+        # test print of results and centroids
         print(updated_centroid_value)
         print(data_values)
 
@@ -41,6 +41,7 @@ def run_k_means(n_clusters, samples_per_cluster, n_features, embiggen_factor, se
     # return nothing
     return None
 
+# main function for k means
 def main():
 
     # define parameters

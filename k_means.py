@@ -22,6 +22,7 @@ def run_k_means(n_clusters, samples_per_cluster, n_features, embiggen_factor, se
 
     # create data for K means
     data_centroids, samples = create_samples(n_clusters, samples_per_cluster, n_features, embiggen_factor, seed)
+    print(samples)
     initial_k_centroids = choose_random_centroids(samples, n_clusters)
     nearest_indices = assign_to_nearest(samples, initial_k_centroids)
     updated_centroids = update_centroids(samples, nearest_indices, n_clusters)

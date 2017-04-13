@@ -57,7 +57,7 @@ def create_samples(n_clusters, n_samples_per_cluster, n_features, embiggen_facto
     for _ in range(n_clusters):
 
         current_samples = tf.random_normal([n_samples_per_cluster, n_features], stddev=5.0)
-        current_centroid = tf.random_normal([1, n_features], stddev=5.0) * embiggen_factor + embiggen_factor/2
+        current_centroid = (tf.random_normal([1, n_features], stddev=5.0) * embiggen_factor) - (embiggen_factor/2)
         current_samples = current_samples + current_centroid
 
         samples.append(current_samples)
@@ -67,7 +67,7 @@ def create_samples(n_clusters, n_samples_per_cluster, n_features, embiggen_facto
     samples = tf.concat(samples, 0, name='samples')
     centroids = tf.concat(centroids, 0, name='centroids')
 
-    return samples, centroids
+    return centroids, samples
 
 def choose_random_centroids(samples, n_clusters):
     """Selects and returns randomly chosen centroids from samples. Remember:
@@ -141,4 +141,22 @@ def update_centroids(samples, nearest_indices, n_clusters):
 
     return updated_centroids
 
+# below is for debugging only.
+def gen_samples(n_clusters, n_samples_per_cluster, n_features, embiggen_factor, seed):
+    np.random.seed(seed)
+    slices = []
+    centroids = []
+    # Create samples for each cluster
+    for i in range(n_clusters):
+        samples = tf.random_normal((n_samples_per_cluster, n_features),
+                               mean=0.0, stddev=5.0, dtype=tf.float32, seed=seed, name="cluster_{}".format(i))
+        current_centroid = (np.random.random((1, n_features)) * embiggen_factor) - (embiggen_factor/2)
+        centroids.append(current_centroid)
+        samples += current_centroid
+        slices.append(samples)
+    # Create a big "samples" dataset
+        samples = tf.concat(slices, 0, name='samples')
+        centroids = tf.concat(centroids, 0, name='centroids')
+        centroids = tf.cast(centroids, tf.float32)
+        return centroids, samples
 

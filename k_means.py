@@ -29,8 +29,7 @@ def run_k_means(n_clusters, samples_per_cluster, n_features, embiggen_factor, se
     # perform TF session
     model = tf.global_variables_initializer()
     with tf.Session() as session:
-        data_values = session.run(samples)
-        updated_centroid_value = session.run(updated_centroids)
+        data_values, updated_centroid_value = session.run([samples, updated_centroids])
         # test print of results and centroids
         print(updated_centroid_value)
         print(data_values)
@@ -48,7 +47,7 @@ def main():
     n_clusters = 3
     samples_per_cluster = 200
     n_features = 2
-    seed = 700
+    seed = np.random.seed(700)
     embiggen_factor = 70
 
     # run the function
